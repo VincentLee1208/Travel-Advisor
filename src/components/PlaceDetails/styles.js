@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles';
+import { NoEncryption } from '@material-ui/icons';
 
 export default makeStyles(() => ({
   chip: {
@@ -10,4 +11,15 @@ export default makeStyles(() => ({
   spacing: {
     display: 'flex', alignItems: 'center', justifyContent: 'space-between',
   },
+  dates: {
+    display: 'inline', justifyContent: 'space-between',
+  },
+  hoursButton: {
+    backgroundColor: 'transparent', fontWeight: 'bold', fontSize: '1em', padding: '5px',
+
+    "&:hover": {
+      color: 'blue', borderColor: 'blue', 
+    }
+  },
+
 }));

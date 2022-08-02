@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Box, Typography, Button, Card, CardMedia, CardContent, CardActions, Chip } from '@material-ui/core';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import PhoneIcon from '@material-ui/icons/Phone';
@@ -8,10 +8,12 @@ import useStyles from './styles';
 
 const PlaceDetails = ({ place }) => {
     const classes = useStyles();
-    const days =[0, 1, 2, 3];
-    const dayNames = ["Mon", "Tues", "Wed", "Thurs"];
+    const days =[0, 1, 2, 3, 4, 5, 6];
+    const dayNames = ["Mon", "Tues", "Wed", "Thurs", "Fri", "Sat", "Sun"];
 
-    console.log(place);
+    //console.log(place);
+    const [seeHours, setSeeHours] = useState(true);
+
     return (
         /* {6} indicates drop shadow level*/ 
         <Card elevation={6}>
@@ -32,50 +34,53 @@ const PlaceDetails = ({ place }) => {
                     <Typography variant="subtitle1">Ranking</Typography>
                     <Typography gutterBottom variant="subtitle1">{place.ranking}</Typography>
                 </Box>
+                {place?.hours?.week_ranges ?
+                <button className={classes.hoursButton} onClick={() => setSeeHours(!seeHours)}>Show Hours</button> : <p></p>
+                }
+                {seeHours? <p></p> :
+                    <Box>
+                        {days.map((day) => (
+                            
+                            <Typography variant="subtitle1" color="textSecondary">
+                                {dayNames[day]} :
+                                {place?.hours?.week_ranges[day].map((hour) => {
+                                    var openHour = hour.open_time/60;
+                                    openHour = Math.floor(openHour);
+                                    //console.log(openHour);
+                                    var openMin = hour.open_time % 60;
 
-                <Box display="inline" justifyContent="space-between">
-                    <Typography variant="subtitle1">Hours</Typography>
-                    {days.map((day) => (
-                        
-                        <Typography variant="subtitle1" color="textSecondary" className={classes.subtitle}>
-                            {dayNames[day]} :
-                            {place?.hours?.week_ranges[day].map((hour) => {
-                                var openHour = hour.open_time/60;
-                                openHour = Math.floor(openHour);
-                                console.log(openHour);
-                                var openMin = hour.open_time % 60;
+                                    var closeHour = hour.close_time/60;
+                                    closeHour = Math.floor(closeHour);
+                                    var closeMin = hour.close_time %60;
 
-                                var closeHour = hour.close_time/60;
-                                closeHour = Math.floor(closeHour);
-                                var closeMin = hour.close_time %60;
-
-                                if(openMin === 0) {
-                                    openMin = "00";
-                                }
-
-                                if(closeMin === 0) {
-                                    closeMin = "00";
-                                }
-
-                
-                                if(openHour > 12) {
-                                    if(closeHour > 12) {
-                                        return <Typography variant="subtitle1">{openHour % 12}:{openMin} pm - {closeHour %12}:{closeMin} pm</Typography>
+                                    if(openMin === 0) {
+                                        openMin = "00";
                                     }
-                                    return <Typography variant="subtitle1">{openHour % 12}:{openMin} pm - {closeHour %12}:{closeMin} am</Typography>
-                                    
-                                }
 
-                                if(closeHour > 12) {
-                                    return <Typography variant="subtitle1">{openHour % 12}:{openMin} am - {closeHour %12}:{closeMin} pm</Typography>
-                                }
-                                return <Typography variant="subtitle1">{openHour % 12}:{openMin} am - {closeHour %12}:{closeMin} am</Typography>
-                                
-                            })}
-                        </Typography>
-        
-                    ))}
-                </Box>
+                                    if(closeMin === 0) {
+                                        closeMin = "00";
+                                    }
+
+                    
+                                    if(openHour > 12) {
+                                        if(closeHour > 12) {
+                                            return <Typography variant="subtitle1" className={classes.dates}>{openHour % 12}:{openMin} pm - {closeHour %12}:{closeMin} pm</Typography>
+                                        }
+                                        return <Typography variant="subtitle1" className={classes.dates}>{openHour % 12}:{openMin} pm - {closeHour %12}:{closeMin} am</Typography>
+                                        
+                                    }
+
+                                    if(closeHour > 12) {
+                                        return <Typography variant="subtitle1" className={classes.dates}>{openHour % 12}:{openMin} am - {closeHour %12}:{closeMin} pm</Typography>
+                                    }
+                                    return <Typography variant="subtitle1" className={classes.dates}>{openHour % 12}:{openMin} am - {closeHour %12}:{closeMin} am</Typography>
+                                    
+                                })}
+                            </Typography>
+            
+                        ))}
+                    </Box>
+                }
 
                 {/*Checks if there is location and if location has cuisines then displays it */}
                 {place?.cuisine?.map(({ name }) => (
