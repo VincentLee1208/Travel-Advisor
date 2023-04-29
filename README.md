@@ -1,3 +1,7 @@
+#About
+
+React tutorial project that allowed users to find activities and restaurants in specific locations.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
